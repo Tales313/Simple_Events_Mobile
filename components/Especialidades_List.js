@@ -8,7 +8,7 @@ export default class EspecialidadesList extends Component {
         super(props)
 
         this.state = {
-            data: [],
+            especialidades: [],
         }
     }
 
@@ -17,10 +17,9 @@ export default class EspecialidadesList extends Component {
     }
 
     getEspecialidadesFromApi() {
-        const url = 'https://s-events-api.herokuapp.com/api/users/'
-        //const url = 'http://localhost:8000/especialidades'
+        const url = 'https://s-events-api.herokuapp.com/api/especialidades/'
         fetch(url).then(res => res.json()).then(res => {
-            this.setState({data: res})
+            this.setState({especialidades: res})
         }).catch(error => {
             console.error(error)
         })
@@ -32,7 +31,7 @@ export default class EspecialidadesList extends Component {
                 <Menu/>
                 <View style={styles.container}>
                     <FlatList
-                        data={this.state.data}
+                        data={this.state.especialidades}
                         keyExtractor={item => item.nome}
                         renderItem={({item}) => (
                             <View style={{paddingBottom: 20, paddingLeft: 10}}>

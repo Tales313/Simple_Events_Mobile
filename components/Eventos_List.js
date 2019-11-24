@@ -8,7 +8,7 @@ export default class EventosList extends Component {
         super(props)
 
         this.state = {
-            data: [],
+            eventos: [],
         }
     }
 
@@ -17,10 +17,9 @@ export default class EventosList extends Component {
     }
 
     getEventosFromApi() {
-        const url = 'https://s-events-api.herokuapp.com/api/users/'
-        //const url = 'http://localhost:8000/eventos'
+        const url = 'https://s-events-api.herokuapp.com/api/eventos/'
         fetch(url).then(res => res.json()).then(res => {
-            this.setState({data: res})
+            this.setState({eventos: res})
         }).catch(error => {
             console.error(error)
         })
@@ -32,12 +31,12 @@ export default class EventosList extends Component {
                 <Menu/>
                 <View style={styles.container}>
                     <FlatList
-                        data={this.state.data}
+                        data={this.state.eventos}
                         keyExtractor={item => item.nome}
                         renderItem={({item}) => (
                             <View style={styles.evento}>
                                 <Text style={styles.nome}>{item.nome}</Text>
-                                <Text style={styles.descricao}>{item.data_nascimento}</Text>
+                                <Text style={styles.descricao}>{item.data}</Text>
                             </View>
                         )}
                     />
