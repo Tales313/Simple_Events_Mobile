@@ -11,6 +11,8 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 
+import Menu from './TopBar'
+
 export default class EventoNew extends Component {
 
     state = {
@@ -42,6 +44,8 @@ export default class EventoNew extends Component {
 
     render(){
         return(
+            <View style={{height: '100%'}}>
+            <Menu/>
             <View style={styles.container}>
                 <View style={styles.inputBloco}>
                     <Text
@@ -97,6 +101,7 @@ export default class EventoNew extends Component {
                     <Button title="Criar" onPress={this.criarEvento} color="#309ebf"/>
                 </View>
             </View>
+            </View>
         )
     }
 
@@ -104,7 +109,8 @@ export default class EventoNew extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        //flex: 1,
+        height: (Dimensions.get('window').height / 100) * 92,
         paddingHorizontal: 40,
         paddingVertical: 70,
     },

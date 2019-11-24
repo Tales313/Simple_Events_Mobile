@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions } from 'react-native'
+import Menu from './TopBar'
 
 export default class EventosList extends Component {
 
@@ -27,7 +28,8 @@ export default class EventosList extends Component {
 
     render() {
         return (
-            <ScrollView>
+            <ScrollView style={{height: '100%'}}>
+                <Menu/>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.data}
@@ -47,7 +49,8 @@ export default class EventosList extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        //flex: 1,
+        height: (Dimensions.get('window').height / 100) * 92,
         paddingTop: 20,
         paddingHorizontal: 15,
     },
