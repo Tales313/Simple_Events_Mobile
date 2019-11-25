@@ -15,11 +15,15 @@ import Menu from './TopBar'
 
 export default class EventoNew extends Component {
 
-    state = {
-        nome: '',
-        descricao: '',
-        data: '',
-        local: ''
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            nome: '',
+            descricao: '',
+            data: '',
+            local: ''
+        }
     }
 
     alterarNome = nome => {
@@ -38,8 +42,36 @@ export default class EventoNew extends Component {
         this.setState({local})
     }
 
-    criarEvento() {
-        ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT);
+    criarEvento = async () => {
+        let nome = this.state.nome
+        let descricao = this.state.descricao
+        let data = this.state.data
+        let local = this.state.local
+
+        const link = 'https://s-events-api.herokuapp.com/api/eventos/'
+        const cabecalho = {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                'nome': nome,
+                'descricao': descricao,
+                'data': data,
+                'local': local,
+                'finalizado': false,
+                'owner': 1
+            })
+        }
+
+        let response = await fetch(link, cabecalho)
+        if(response.status == 201) {
+            ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT)
+        }else {
+            ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
+        }
+
     }
 
     render(){
@@ -73,7 +105,7 @@ export default class EventoNew extends Component {
                             style={styles.inputText}
                             date={this.state.data}
                             mode="date"
-                            format="DD-MM-YYYY"
+                            format="YYYY-MM-DD"
                             minDate={new Date()}
                             onDateChange={this.alterarData}
                             customStyles={{
