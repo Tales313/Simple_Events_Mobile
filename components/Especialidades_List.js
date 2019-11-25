@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions } from 'react-native'
-import Menu from './TopBar'
 
 export default class EspecialidadesList extends Component {
 
@@ -28,7 +27,6 @@ export default class EspecialidadesList extends Component {
     render() {
         return (
             <ScrollView style={{height: '100%'}}>
-                <Menu/>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.especialidades}

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 
-import Menu from './TopBar'
-
 export default class EventoShow extends Component {
 
     static navigationOptions = {
@@ -46,7 +44,6 @@ export default class EventoShow extends Component {
     render(){
         return(
             <View style={{height: '100%'}}>
-                <Menu/>
                 <View style={styles.container}>
                     <View style={styles.blocoNome}>
                         <Text style={styles.nome}>{this.props.navigation.getParam('nome')}</Text>
