@@ -3,8 +3,22 @@ import { ScrollView, FlatList, StyleSheet, ToastAndroid,
     Text, View, Dimensions, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Menu from './TopBar'
+import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
+import Evento from './Evento_Show'
 
-export default class EventosList extends Component {
+class EventosList extends Component {
+
+    static navigationOptions = {
+        title: 'Eventos',
+        headerStyle: {
+            backgroundColor: '#309ebf'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        }
+    }
 
     constructor(props) {
         super(props)
@@ -60,7 +74,15 @@ export default class EventosList extends Component {
                         keyExtractor={item => item.nome}
                         renderItem={({item}) => (
                             <View style={styles.evento}>
-                                <Text style={styles.nome}>{item.nome}</Text>
+                                <TouchableHighlight 
+                                    onPress={ () => this.props.navigation.navigate('Evento', {
+                                        nome: item.nome,
+                                        descricao: item.descricao,
+                                        data: item.data,
+                                        local: item.local
+                                    }) }>
+                                    <Text style={styles.nome}>{item.nome}</Text>
+                                </TouchableHighlight>
                                 <Text style={styles.descricao}>{item.data}</Text>
                                 <TouchableHighlight
                                     onPress={() => this.apagarEvento(item.id)}>
@@ -74,6 +96,26 @@ export default class EventosList extends Component {
         )
     }
 }
+
+const AppNavigator = createStackNavigator(
+    {
+        EventosList: {screen: EventosList},
+        Evento: {screen: Evento}
+    },
+    {
+        initialRouteName: 'EventosList'
+    }
+  )
+  
+const AppContainer = createAppContainer(AppNavigator)
+
+export default class App extends Component {
+    render(){
+      return(
+        <AppContainer></AppContainer>
+      )
+    }
+  }
 
 const styles = StyleSheet.create({
     container: {
