@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
     Text, View, Dimensions, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Menu from './TopBar'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import Evento from './Evento_Show'
@@ -67,7 +66,6 @@ class EventosList extends Component {
     render() {
         return (
             <ScrollView style={{height: '100%'}}>
-                <Menu/>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.eventos}

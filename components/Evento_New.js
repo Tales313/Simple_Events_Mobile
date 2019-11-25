@@ -11,8 +11,6 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 
-import Menu from './TopBar'
-
 export default class EventoNew extends Component {
 
     constructor(props) {
@@ -77,7 +75,6 @@ export default class EventoNew extends Component {
     render(){
         return(
             <View style={{height: '100%'}}>
-            <Menu/>
             <View style={styles.container}>
                 <View style={styles.inputBloco}>
                     <Text
