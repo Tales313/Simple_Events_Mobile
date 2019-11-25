@@ -11,7 +11,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 class HomeScreen extends Component {
 
   static navigationOptions = {
-    title: 'Profile',
+    title: 'Home',
     headerStyle: {
       backgroundColor: 'lightblue'
     },
