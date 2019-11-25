@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions } from 'react-native'
+import { ScrollView, FlatList, StyleSheet, ToastAndroid,
+    Text, View, Dimensions, TouchableHighlight } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Menu from './TopBar'
 
 export default class EventosList extends Component {
@@ -9,11 +11,34 @@ export default class EventosList extends Component {
 
         this.state = {
             eventos: [],
+            refresh: 0
         }
     }
 
     componentDidMount() {
         this.getEventosFromApi()
+    }
+
+    apagarEvento= async (id) => {
+        const link = 'https://s-events-api.herokuapp.com/api/eventos/'
+        const cabecalho = {
+            method: "DELETE",
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                'id': id
+            })
+        }
+
+        let response = await fetch(link, cabecalho)
+        if(response.status >= 200 && response.status <= 204) {
+            ToastAndroid.show('Evento Apagado!', ToastAndroid.SHORT)
+        }else {
+            ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
+        }
+        this.setState({refresh: this.state.refresh+1})
     }
 
     getEventosFromApi() {
@@ -37,6 +62,10 @@ export default class EventosList extends Component {
                             <View style={styles.evento}>
                                 <Text style={styles.nome}>{item.nome}</Text>
                                 <Text style={styles.descricao}>{item.data}</Text>
+                                <TouchableHighlight
+                                    onPress={() => this.apagarEvento(item.id)}>
+                                    <Icon name="trash" size={25} color="red" />
+                                </TouchableHighlight>
                             </View>
                         )}
                     />
@@ -61,6 +90,7 @@ const styles = StyleSheet.create({
         color: 'grey'
     },
     evento: {
+        //borderWidth: 1,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
