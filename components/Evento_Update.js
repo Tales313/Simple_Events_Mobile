@@ -10,16 +10,17 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 
-export default class EventoNew extends Component {
+export default class EventoUpdate extends Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
-            nome: '',
-            descricao: '',
-            data: '',
-            local: ''
+            nome: this.props.navigation.getParam('nome'),
+            descricao: this.props.navigation.getParam('descricao'),
+            data: this.props.navigation.getParam('data'),
+            local: this.props.navigation.getParam('local'),
+            owner: this.props.navigation.getParam('owner')
         }
     }
 
@@ -39,15 +40,16 @@ export default class EventoNew extends Component {
         this.setState({local})
     }
 
-    criarEvento = async () => {
+    atualizarEvento = async (id) => {
         let nome = this.state.nome
         let descricao = this.state.descricao
         let data = this.state.data
         let local = this.state.local
+        let owner = this.state.owner
 
-        const link = 'https://s-events-api.herokuapp.com/api/eventos/'
+        const link = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
         const cabecalho = {
-            method: "POST",
+            method: "PUT",
             headers: {
               'Accept': 'application/json',
               'Content-type': 'application/json'
@@ -57,18 +59,19 @@ export default class EventoNew extends Component {
                 'descricao': descricao,
                 'data': data,
                 'local': local,
-                'finalizado': false,
-                'owner': 1
+                'owner': owner
             })
         }
 
         let response = await fetch(link, cabecalho)
-        if(response.status == 201) {
-            ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT)
+        if(response.status >= 200 && response.status <= 204) {
+            ToastAndroid.show('Evento Atualizado!', ToastAndroid.SHORT)
+            const refreshFunction = this.props.navigation.getParam('refresh')
+            refreshFunction() // atualizando a listagem de eventos
+            this.props.navigation.goBack()
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
-
     }
 
     render(){
@@ -78,19 +81,19 @@ export default class EventoNew extends Component {
                 <View style={styles.inputBloco}>
                     <Text
                         style={{fontSize: 45}}
-                    >Novo Evento</Text>
+                    >Editar Evento</Text>
                 </View>
                 <View style={styles.inputBloco}>
                     <View>
                         <Text style={styles.label} >Nome</Text>
-                        <TextInput style={styles.inputText} value={this.state.nome} 
+                        <TextInput style={styles.inputText} value={this.state.nome}
                             onChangeText={this.alterarNome} />
                     </View>
                 </View>
                 <View style={styles.inputBloco}>
                     <View>
                         <Text style={styles.label} >Descrição</Text>
-                        <TextInput style={styles.inputText} value={this.state.descricao} 
+                        <TextInput style={styles.inputText} value={this.state.descricao}
                             onChangeText={this.alterarDescricao} />
                     </View>
                 </View>
@@ -126,7 +129,8 @@ export default class EventoNew extends Component {
                     </View>
                 </View>
                 <View style={styles.inputBloco}>
-                    <Button title="Criar" onPress={this.criarEvento} color="#309ebf"/>
+                    <Button title="Atualizar" 
+                        onPress={() => this.atualizarEvento(this.props.navigation.getParam('id'))} color="#309ebf"/>
                 </View>
             </View>
             </View>
