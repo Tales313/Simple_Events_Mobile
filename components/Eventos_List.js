@@ -37,21 +37,19 @@ class EventosList extends Component {
         
 
     apagarEvento= async (id) => {
-        const link = 'https://s-events-api.herokuapp.com/api/eventos/'
+        const link = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
         const cabecalho = {
             method: "DELETE",
             headers: {
               'Accept': 'application/json',
               'Content-type': 'application/json'
             },
-            body: JSON.stringify({
-                'id': id
-            })
         }
 
         let response = await fetch(link, cabecalho)
         if(response.status >= 200 && response.status <= 204) {
             ToastAndroid.show('Evento Apagado!', ToastAndroid.SHORT)
+            this.refresh()
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
