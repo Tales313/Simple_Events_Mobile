@@ -6,6 +6,7 @@ import { createAppContainer, NavigationEvents } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import Evento from './Evento_Show'
 import Editar_Evento from './Evento_Update'
+import Adicionar_Evento from './Evento_New'
 
 class EventosList extends Component {
 
@@ -72,6 +73,14 @@ class EventosList extends Component {
     render() {
         return (
             <ScrollView style={{height: '100%'}}>
+                <View style={styles.addEvento}>
+                    <TouchableHighlight
+                        onPress={ () => this.props.navigation.navigate('Adicionar_Evento', {
+                            refresh: this.refresh.bind(this)
+                        }) }>
+                        <Icon name="plus" size={25} color="green" />
+                    </TouchableHighlight>
+                </View>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.eventos}
@@ -118,6 +127,7 @@ const AppNavigator = createStackNavigator(
         EventosList: {screen: EventosList},
         Evento: {screen: Evento},
         Editar_Evento: {screen: Editar_Evento},
+        Adicionar_Evento: {screen: Adicionar_Evento},
     },
     {
         initialRouteName: 'EventosList'
@@ -135,6 +145,11 @@ export default class App extends Component {
   }
 
 const styles = StyleSheet.create({
+    addEvento: {
+        height: 50,
+        justifyContent: 'flex-end',
+        paddingLeft: 15,
+    },
     container: {
         //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,

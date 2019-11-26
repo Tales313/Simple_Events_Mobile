@@ -12,6 +12,17 @@ import DatePicker from 'react-native-datepicker'
 
 export default class EventoNew extends Component {
 
+    static navigationOptions = {
+        title: 'Novo Evento',
+        headerStyle: {
+            backgroundColor: '#309ebf'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        }
+    }
+
     constructor(props) {
         super(props)
 
@@ -65,6 +76,9 @@ export default class EventoNew extends Component {
         let response = await fetch(link, cabecalho)
         if(response.status == 201) {
             ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT)
+            const refreshFunction = this.props.navigation.getParam('refresh')
+            refreshFunction() // atualizando a listagem de eventos
+            this.props.navigation.goBack()
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
