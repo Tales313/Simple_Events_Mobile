@@ -12,6 +12,17 @@ import DatePicker from 'react-native-datepicker'
 
 export default class EventoUpdate extends Component {
 
+    static navigationOptions = {
+        title: 'Atualizar Evento',
+        headerStyle: {
+            backgroundColor: '#309ebf'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        }
+    }
+
     constructor(props) {
         super(props)
 
