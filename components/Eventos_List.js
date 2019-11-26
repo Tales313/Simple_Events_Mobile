@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
     Text, View, Dimensions, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, NavigationEvents } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import Evento from './Evento_Show'
+import Editar_Evento from './Evento_Update'
 
 class EventosList extends Component {
 
@@ -26,11 +27,14 @@ class EventosList extends Component {
             eventos: [],
             refresh: 0
         }
-    }
-
-    componentDidMount() {
+        
         this.getEventosFromApi()
     }
+
+    //componentDidMount() {
+        //this.getEventosFromApi()
+    //}
+        
 
     apagarEvento= async (id) => {
         const link = 'https://s-events-api.herokuapp.com/api/eventos/'
@@ -51,7 +55,7 @@ class EventosList extends Component {
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
-        this.setState({refresh: this.state.refresh+1})
+        this.refresh()
     }
 
     getEventosFromApi() {
@@ -61,6 +65,10 @@ class EventosList extends Component {
         }).catch(error => {
             console.error(error)
         })
+    }
+
+    refresh() {
+        this.getEventosFromApi()
     }
 
     render() {
@@ -77,11 +85,23 @@ class EventosList extends Component {
                                         nome: item.nome,
                                         descricao: item.descricao,
                                         data: item.data,
-                                        local: item.local
+                                        local: item.local,
                                     }) }>
                                     <Text style={styles.nome}>{item.nome}</Text>
                                 </TouchableHighlight>
                                 <Text style={styles.descricao}>{item.data}</Text>
+                                <TouchableHighlight
+                                    onPress={() => this.props.navigation.navigate('Editar_Evento', {
+                                        id: item.id,
+                                        nome: item.nome,
+                                        descricao: item.descricao,
+                                        data: item.data,
+                                        local: item.local,
+                                        owner: item.owner,
+                                        refresh: this.refresh.bind(this)
+                                    })}>
+                                    <Icon name="pencil" size={25} color="blue" />
+                                </TouchableHighlight>
                                 <TouchableHighlight
                                     onPress={() => this.apagarEvento(item.id)}>
                                     <Icon name="trash" size={25} color="red" />
@@ -98,7 +118,8 @@ class EventosList extends Component {
 const AppNavigator = createStackNavigator(
     {
         EventosList: {screen: EventosList},
-        Evento: {screen: Evento}
+        Evento: {screen: Evento},
+        Editar_Evento: {screen: Editar_Evento},
     },
     {
         initialRouteName: 'EventosList'
