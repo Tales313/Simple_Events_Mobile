@@ -2,13 +2,8 @@ import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
     Text, View, Dimensions, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createAppContainer, NavigationEvents } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
-import Evento from './Evento_Show'
-import Editar_Evento from './Evento_Update'
-import Adicionar_Evento from './Evento_New'
 
-class EventosList extends Component {
+export default class EventosList extends Component {
 
     static navigationOptions = {
         title: 'Eventos',
@@ -26,7 +21,9 @@ class EventosList extends Component {
 
         this.state = {
             eventos: [],
-            refresh: 0
+            refresh: 0,
+            usuario_nome: this.props.navigation.getParam('usuario_nome'),
+            usuario_id: this.props.navigation.getParam('usuario_id')
         }
         
         this.getEventosFromApi()
@@ -37,7 +34,7 @@ class EventosList extends Component {
     //}
         
 
-    apagarEvento= async (id) => {
+    apagarEvento = async (id) => {
         const link = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
         const cabecalho = {
             method: "DELETE",
@@ -66,6 +63,15 @@ class EventosList extends Component {
         })
     }
 
+    abrirAddEvento() {
+        console.log('eventos-list-usuario.nome' + this.state.usuario_nome)
+        console.log('eventos-list usuario_id: ' + this.state.usuario_id)
+        this.props.navigation.navigate('Adicionar_Evento', {
+            refresh: this.refresh.bind(this),
+            usuario_id: this.state.usuario_id
+        }) 
+    }
+
     refresh() {
         this.getEventosFromApi()
     }
@@ -75,9 +81,7 @@ class EventosList extends Component {
             <ScrollView style={{height: '100%'}}>
                 <View style={styles.addEvento}>
                     <TouchableHighlight
-                        onPress={ () => this.props.navigation.navigate('Adicionar_Evento', {
-                            refresh: this.refresh.bind(this)
-                        }) }>
+                        onPress={ () => this.abrirAddEvento() }>
                         <Icon name="plus" size={25} color="green" />
                     </TouchableHighlight>
                 </View>
@@ -121,28 +125,6 @@ class EventosList extends Component {
         )
     }
 }
-
-const AppNavigator = createStackNavigator(
-    {
-        EventosList: {screen: EventosList},
-        Evento: {screen: Evento},
-        Editar_Evento: {screen: Editar_Evento},
-        Adicionar_Evento: {screen: Adicionar_Evento},
-    },
-    {
-        initialRouteName: 'EventosList'
-    }
-  )
-  
-const AppContainer = createAppContainer(AppNavigator)
-
-export default class App extends Component {
-    render(){
-      return(
-        <AppContainer></AppContainer>
-      )
-    }
-  }
 
 const styles = StyleSheet.create({
     addEvento: {
