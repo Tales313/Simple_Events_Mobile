@@ -30,8 +30,11 @@ export default class EventoNew extends Component {
             nome: '',
             descricao: '',
             data: '',
-            local: ''
+            local: '',
+            usuario_id: this.props.navigation.getParam('usuario_id')
         }
+
+        console.log('construtor evento new: ' + this.props.navigation.getParam('usuario_id'))
     }
 
     alterarNome = nome => {
@@ -55,6 +58,8 @@ export default class EventoNew extends Component {
         let descricao = this.state.descricao
         let data = this.state.data
         let local = this.state.local
+        let usuario_id = this.state.usuario_id
+        console.log('criar evento usuario_id: ' + usuario_id)
 
         const link = 'https://s-events-api.herokuapp.com/api/eventos/'
         const cabecalho = {
@@ -74,6 +79,9 @@ export default class EventoNew extends Component {
         }
 
         let response = await fetch(link, cabecalho)
+        console.log('response: ' + response)
+        let evento =  await response.json()
+        console.log('evento: ' + evento)
         if(response.status == 201) {
             ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT)
             const refreshFunction = this.props.navigation.getParam('refresh')
