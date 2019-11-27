@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
     Text, View, Dimensions, TouchableHighlight, Button } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class EventosList extends Component {
 
