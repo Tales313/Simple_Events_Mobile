@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
-    Text, View, Dimensions, TouchableHighlight } from 'react-native'
+    Text, View, Dimensions, TouchableHighlight, Button } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class EventosList extends Component {
@@ -72,6 +72,10 @@ export default class EventosList extends Component {
         }) 
     }
 
+    abrirListEspecialidades() {
+        this.props.navigation.navigate('EspecialidadesList') 
+    }
+
     refresh() {
         this.getEventosFromApi()
     }
@@ -80,10 +84,18 @@ export default class EventosList extends Component {
         return (
             <ScrollView style={{height: '100%'}}>
                 <View style={styles.addEvento}>
-                    <TouchableHighlight
-                        onPress={ () => this.abrirAddEvento() }>
-                        <Icon name="plus" size={25} color="green" />
-                    </TouchableHighlight>
+                    <View style={{padding: 10}}>
+                        <TouchableHighlight
+                            onPress={ () => this.abrirAddEvento() }>
+                            <Icon name="plus" size={25} color="green" />
+                        </TouchableHighlight>
+                    </View>
+                    <View style={{padding: 10}}>
+                        <Button
+                            title="Especialidades"
+                            onPress={ () => this.abrirListEspecialidades() }
+                        ></Button>
+                    </View>
                 </View>
                 <View style={styles.container}>
                     <FlatList
@@ -128,8 +140,9 @@ export default class EventosList extends Component {
 
 const styles = StyleSheet.create({
     addEvento: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         height: 50,
-        justifyContent: 'flex-end',
         paddingLeft: 15,
     },
     container: {
