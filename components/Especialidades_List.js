@@ -3,6 +3,17 @@ import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions } from 'react-
 
 export default class EspecialidadesList extends Component {
 
+    static navigationOptions = {
+        title: 'Especialidades',
+        headerStyle: {
+            backgroundColor: '#309ebf'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        }
+    }
+
     constructor(props) {
         super(props)
 
