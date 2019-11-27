@@ -6,6 +6,7 @@ import Editar_Evento from './Evento_Update'
 import Adicionar_Evento from './Evento_New'
 import EventosList from './Eventos_List'
 import EspecialidadesList from './Especialidades_List'
+import Adicionar_Especialidade from './Especialidade_New'
 
 import { 
     View, 
@@ -197,6 +198,7 @@ const AppNavigator = createStackNavigator(
         Adicionar_Evento: {screen: Adicionar_Evento},
         Adicionar_Usuario: {screen: UserNew},
         EspecialidadesList: {screen: EspecialidadesList},
+        Adicionar_Especialidade: {screen: Adicionar_Especialidade},
     },
     {
         initialRouteName: 'Adicionar_Usuario'

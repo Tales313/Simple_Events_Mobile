@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions } from 'react-native'
+import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class EspecialidadesList extends Component {
 
@@ -35,9 +36,25 @@ export default class EspecialidadesList extends Component {
         })
     }
 
+    abrirAddEspecialidade() {
+        this.props.navigation.navigate('Adicionar_Especialidade', {
+            refresh: this.refresh.bind(this)
+        }) 
+    }
+
+    refresh() {
+        this.getEspecialidadesFromApi()
+    }
+
     render() {
         return (
             <ScrollView style={{height: '100%'}}>
+                <View>
+                    <TouchableHighlight
+                        onPress={ () => this.abrirAddEspecialidade() }>
+                        <Icon name="plus" size={25} color="green" />
+                    </TouchableHighlight>
+                </View>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.especialidades}

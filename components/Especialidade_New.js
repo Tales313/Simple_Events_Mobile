@@ -59,9 +59,9 @@ export default class EspecialidadeNew extends Component {
         let response = await fetch(link, cabecalho)
         if(response.status == 201) {
             ToastAndroid.show('Especialidade Criada!', ToastAndroid.SHORT)
-            //const refreshFunction = this.props.navigation.getParam('refresh')
-            //refreshFunction() // atualizando a listagem de especialidades
-            //this.props.navigation.goBack()
+            const refreshFunction = this.props.navigation.getParam('refresh')
+            refreshFunction() // atualizando a listagem de especialidades
+            this.props.navigation.goBack()
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
