@@ -5,10 +5,10 @@ import {
     TextInput, 
     StyleSheet, 
     Dimensions, 
-    Button,
     ToastAndroid,
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default class EventoNew extends Component {
 
@@ -99,7 +99,7 @@ export default class EventoNew extends Component {
             <View style={styles.container}>
                 <View style={styles.inputBloco}>
                     <Text
-                        style={{fontSize: 45}}
+                        style={styles.textoGrande}
                     >Novo Evento</Text>
                 </View>
                 <View style={styles.inputBloco}>
@@ -148,7 +148,13 @@ export default class EventoNew extends Component {
                     </View>
                 </View>
                 <View style={styles.inputBloco}>
-                    <Button title="Criar" onPress={this.criarEvento} color="#309ebf"/>
+                    <TouchableOpacity
+                        onPress={() => this.abrirTelaLogin()}
+                    >
+                        <View style={styles.botaoSubmit}>
+                            <Text style={styles.textoBotaoSubmit}>Criar</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             </View>
@@ -163,6 +169,11 @@ const styles = StyleSheet.create({
         height: (Dimensions.get('window').height / 100) * 92,
         paddingHorizontal: 40,
         paddingVertical: 70,
+    },
+    textoGrande: {
+        fontWeight: 'bold',
+        color: '#309ebf',
+        fontSize: 40,
     },
     inputBloco: {
         //borderWidth: 1,
@@ -184,11 +195,15 @@ const styles = StyleSheet.create({
         borderColor: '#309ebf',
     },
     botaoSubmit: {
-        alignItems: 'center',
-        borderRadius: 5,
-        backgroundColor: "#309ebf",
-        width: 50,
-        height: 20,
-        color: "#fff",
+        marginTop: 40,
+        backgroundColor: '#309ebf',
+        paddingHorizontal: 80,
+        paddingVertical: 8,
+        borderRadius: 25,
+    },
+    textoBotaoSubmit: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff'
     }
 })
