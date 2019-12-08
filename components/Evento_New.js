@@ -149,7 +149,7 @@ export default class EventoNew extends Component {
                 </View>
                 <View style={styles.inputBloco}>
                     <TouchableOpacity
-                        onPress={() => this.abrirTelaLogin()}
+                        onPress={() => this.criarEvento()}
                     >
                         <View style={styles.botaoSubmit}>
                             <Text style={styles.textoBotaoSubmit}>Criar</Text>
