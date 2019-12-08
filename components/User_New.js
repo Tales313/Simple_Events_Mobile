@@ -1,12 +1,4 @@
 import React, { Component } from 'react'
-import { createAppContainer } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
-import Evento from './Evento_Show'
-import Editar_Evento from './Evento_Update'
-import Adicionar_Evento from './Evento_New'
-import EventosList from './Eventos_List'
-import EspecialidadesList from './Especialidades_List'
-import Adicionar_Especialidade from './Especialidade_New'
 
 import { 
     View, 
@@ -19,7 +11,7 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 
-class UserNew extends Component {
+export default class UserNew extends Component {
 
     static navigationOptions = {
         title: 'Novo Usuário',
@@ -190,30 +182,30 @@ class UserNew extends Component {
 
 }
 
-const AppNavigator = createStackNavigator(
-    {
-        EventosList: {screen: EventosList},
-        Evento: {screen: Evento},
-        Editar_Evento: {screen: Editar_Evento},
-        Adicionar_Evento: {screen: Adicionar_Evento},
-        Adicionar_Usuario: {screen: UserNew},
-        EspecialidadesList: {screen: EspecialidadesList},
-        Adicionar_Especialidade: {screen: Adicionar_Especialidade},
-    },
-    {
-        initialRouteName: 'Adicionar_Usuario'
-    }
-  )
+//const AppNavigator = createStackNavigator(
+//    {
+//        EventosList: {screen: EventosList},
+//       Evento: {screen: Evento},
+//        Editar_Evento: {screen: Editar_Evento},
+//        Adicionar_Evento: {screen: Adicionar_Evento},
+//        Adicionar_Usuario: {screen: UserNew},
+//        EspecialidadesList: {screen: EspecialidadesList},
+//        Adicionar_Especialidade: {screen: Adicionar_Especialidade},
+//    },
+//    {
+//        initialRouteName: 'Adicionar_Usuario'
+//    }
+//  )
   
-const AppContainer = createAppContainer(AppNavigator)
+//const AppContainer = createAppContainer(AppNavigator)
 
-export default class App extends Component {
-    render(){
-      return(
-        <AppContainer></AppContainer>
-      )
-    }
-  }
+//export default class App extends Component {
+//    render(){
+//      return(
+//        <AppContainer></AppContainer>
+//      )
+//    }
+//  }
 
 
 const styles = StyleSheet.create({
