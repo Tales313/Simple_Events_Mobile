@@ -37,7 +37,10 @@ class Home extends Component {
     }
 
     abrirTelaLogin() {
-        this.props.navigation.navigate('Login')
+        // por enquanto que o login não está implementado
+        // navega direto pra tela de eventos
+        //this.props.navigation.navigate('Login')
+        this.props.navigation.navigate('EventosList')
     }
 
     render(){
