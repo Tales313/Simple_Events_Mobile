@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native'
+import { 
+    ScrollView, 
+    FlatList, 
+    StyleSheet, 
+    Text, 
+    View, 
+    Dimensions, 
+    TouchableOpacity, 
+    ToastAndroid 
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import ActionButton from 'react-native-action-button'
 
 export default class EspecialidadesList extends Component {
 
@@ -42,48 +52,100 @@ export default class EspecialidadesList extends Component {
         }) 
     }
 
+    abrirEditarEspecialidade(id) {
+        ToastAndroid.show('Implementar Editar!!!', ToastAndroid.SHORT)
+    }
+
+    apagarEspecialidade(id) {
+        ToastAndroid.show('Implementar Apagar!!!', ToastAndroid.SHORT)
+    }
+
     refresh() {
         this.getEspecialidadesFromApi()
     }
 
     render() {
         return (
-            <ScrollView style={{height: '100%'}}>
-                <View>
-                    <TouchableHighlight
-                        onPress={ () => this.abrirAddEspecialidade() }>
-                        <Icon name="plus" size={25} color="green" />
-                    </TouchableHighlight>
-                </View>
+            <ScrollView style={styles.tela}>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.especialidades}
                         keyExtractor={item => item.nome}
                         renderItem={({item}) => (
-                            <View style={{paddingBottom: 20, paddingLeft: 10}}>
-                                <Text style={styles.nome}>{item.nome}</Text>
-                                <Text style={styles.descricao}>{item.email}</Text>
+                            <View style={styles.especialidade}>
+                                <View style={styles.nomeDescricao}>
+                                    <Text style={styles.nome}>{item.nome}</Text>
+                                    <Text style={styles.descricao}>{item.descricao}</Text>
+                                </View>
+                                <View style={styles.editarApagar}>
+                                    <TouchableOpacity
+                                        onPress={() => this.abrirEditarEspecialidade()}>
+                                        <Icon name="pencil" size={25} color="blue" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.apagarEspecialidade(item.id)}>
+                                        <Icon name="trash" size={25} color="red" />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         )}
                     />
                 </View>
+                <ActionButton buttonColor="#309ebf">
+                    <ActionButton.Item
+                        buttonColor="#39ad83"
+                        title="Nova Especialidade"
+                        onPress={() => this.abrirAddEspecialidade()}>
+                        <Icon name="user" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </ActionButton>
             </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    tela: {
+        height: '100%',
+    },
     container: {
         //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,
         paddingTop: 20,
         paddingHorizontal: 5,
     },
+    especialidade: {
+        //borderWidth: 1,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingLeft: 8,
+        borderBottomWidth: 1,
+        borderColor: '#dedede'
+    },
     nome: {
         fontSize: 18,
     },
     descricao: {
         fontSize: 12,
-        color: 'grey'
-    }
+        color: 'grey',
+    },
+    nomeDescricao: {
+        //borderWidth: 1,
+        flex: 8,
+        
+    },
+    editarApagar: {
+        //borderWidth: 1,
+        flex: 2,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
 })
