@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
-    Text, View, Dimensions, TouchableHighlight } from 'react-native'
+    Text, View, Dimensions, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ActionButton from 'react-native-action-button'
 
@@ -104,32 +104,36 @@ export default class EventosList extends Component {
                         keyExtractor={item => item.nome}
                         renderItem={({item}) => (
                             <View style={styles.evento}>
-                                <TouchableHighlight 
-                                    onPress={ () => this.props.navigation.navigate('Evento', {
-                                        nome: item.nome,
-                                        descricao: item.descricao,
-                                        data: item.data,
-                                        local: item.local,
-                                    }) }>
-                                    <Text style={styles.nome}>{item.nome}</Text>
-                                </TouchableHighlight>
-                                <Text style={styles.descricao}>{item.data}</Text>
-                                <TouchableHighlight
-                                    onPress={() => this.props.navigation.navigate('Editar_Evento', {
-                                        id: item.id,
-                                        nome: item.nome,
-                                        descricao: item.descricao,
-                                        data: item.data,
-                                        local: item.local,
-                                        owner: item.owner,
-                                        refresh: this.refresh.bind(this)
-                                    })}>
-                                    <Icon name="pencil" size={25} color="blue" />
-                                </TouchableHighlight>
-                                <TouchableHighlight
-                                    onPress={() => this.apagarEvento(item.id)}>
-                                    <Icon name="trash" size={25} color="red" />
-                                </TouchableHighlight>
+                                <View style={styles.nomeData}>
+                                    <TouchableOpacity 
+                                        onPress={ () => this.props.navigation.navigate('Evento', {
+                                            nome: item.nome,
+                                            descricao: item.descricao,
+                                            data: item.data,
+                                            local: item.local,
+                                        }) }>
+                                        <Text style={styles.nome}>{item.nome}</Text>
+                                    </TouchableOpacity>
+                                    <Text style={styles.data}>{item.data}</Text>
+                                </View>
+                                <View style={styles.editarApagar}>
+                                    <TouchableOpacity
+                                        onPress={() => this.props.navigation.navigate('Editar_Evento', {
+                                            id: item.id,
+                                            nome: item.nome,
+                                            descricao: item.descricao,
+                                            data: item.data,
+                                            local: item.local,
+                                            owner: item.owner,
+                                            refresh: this.refresh.bind(this)
+                                        })}>
+                                        <Icon name="pencil" size={25} color="blue" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => this.apagarEvento(item.id)}>
+                                        <Icon name="trash" size={25} color="red" />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         )}
                     />
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
     nome: {
         fontSize: 18,
     },
-    descricao: {
+    data: {
         fontSize: 12,
         color: 'grey'
     },
@@ -174,6 +178,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderColor: '#dedede'
+    },
+    nomeData: {
+        flex: 8,
+    },
+    editarApagar: {
+        flex: 2,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
     },
     actionButtonIcon: {
         fontSize: 20,
