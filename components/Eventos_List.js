@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, StyleSheet, ToastAndroid,
-    Text, View, Dimensions, TouchableHighlight, Button } from 'react-native'
+    Text, View, Dimensions, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import ActionButton from 'react-native-action-button'
 
 export default class EventosList extends Component {
 
@@ -25,14 +26,28 @@ export default class EventosList extends Component {
             usuario_nome: this.props.navigation.getParam('usuario_nome'),
             usuario_id: this.props.navigation.getParam('usuario_id')
         }
+
+        // se usuario logado for adm:
+        // no actions abaixo adicione um
+        // botao para listagem de especialidades
+
+        this.actions = [
+            {
+                text: 'Novo Evento!',
+                name: 'Adicionar_Evento',
+                icon: require('../images/calendar.jpg'),
+                position: 1,
+            },
+            {
+                text: 'Especialidades',
+                name: 'EspecialidadesList',
+                icon: require('../images/especialidade.png'),
+                position: 2
+            },
+        ]
         
         this.getEventosFromApi()
-    }
-
-    //componentDidMount() {
-        //this.getEventosFromApi()
-    //}
-        
+    }     
 
     apagarEvento = async (id) => {
         const link = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
@@ -82,21 +97,7 @@ export default class EventosList extends Component {
 
     render() {
         return (
-            <ScrollView style={{height: '100%'}}>
-                <View style={styles.addEvento}>
-                    <View style={{padding: 10}}>
-                        <TouchableHighlight
-                            onPress={ () => this.abrirAddEvento() }>
-                            <Icon name="plus" size={25} color="green" />
-                        </TouchableHighlight>
-                    </View>
-                    <View style={{padding: 10}}>
-                        <Button
-                            title="Especialidades"
-                            onPress={ () => this.abrirListEspecialidades() }
-                        ></Button>
-                    </View>
-                </View>
+            <ScrollView style={styles.tela}>
                 <View style={styles.container}>
                     <FlatList
                         data={this.state.eventos}
@@ -133,20 +134,30 @@ export default class EventosList extends Component {
                         )}
                     />
                 </View>
+                <ActionButton buttonColor="#309ebf">
+                    <ActionButton.Item
+                        buttonColor="#39ad83"
+                        title="Novo Evento"
+                        onPress={() => this.abrirAddEvento()}>
+                        <Icon name="calendar" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item
+                        buttonColor="#7339ad"
+                        title="Especialidades"
+                        onPress={() => this.abrirListEspecialidades()}>
+                        <Icon name="users" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </ActionButton>
             </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    addEvento: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height: 50,
-        paddingLeft: 15,
+    tela: {
+        height: '100%',
     },
     container: {
-        //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,
         paddingTop: 20,
         paddingHorizontal: 15,
@@ -159,10 +170,14 @@ const styles = StyleSheet.create({
         color: 'grey'
     },
     evento: {
-        //borderWidth: 1,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 15,
-    }
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
 })
