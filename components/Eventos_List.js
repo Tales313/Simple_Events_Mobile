@@ -3,6 +3,7 @@ import { ScrollView, FlatList, StyleSheet, ToastAndroid,
     Text, View, Dimensions, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ActionButton from 'react-native-action-button'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class EventosList extends Component {
 
@@ -24,7 +25,7 @@ export default class EventosList extends Component {
             eventos: [],
             refresh: 0,
             usuario_nome: this.props.navigation.getParam('usuario_nome'),
-            usuario_id: this.props.navigation.getParam('usuario_id')
+            //usuario_id: this.props.navigation.getParam('usuario_id')
         }
 
         // se usuario logado for adm:
@@ -47,15 +48,26 @@ export default class EventosList extends Component {
         ]
         
         this.getEventosFromApi()
-    }     
+    }
+
+    getToken = async () => {
+        try {
+          const value = await AsyncStorage.getItem('@token')
+          return value
+        } catch(e) {
+          console.log(e)
+        }
+      }
 
     apagarEvento = async (id) => {
+        let token = await this.getToken()
         const link = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
         const cabecalho = {
             method: "DELETE",
             headers: {
               'Accept': 'application/json',
-              'Content-type': 'application/json'
+              'Content-type': 'application/json',
+              'Authorization': 'Token ' + token,
             },
         }
 
@@ -83,7 +95,7 @@ export default class EventosList extends Component {
         console.log('eventos-list usuario_id: ' + this.state.usuario_id)
         this.props.navigation.navigate('Adicionar_Evento', {
             refresh: this.refresh.bind(this),
-            usuario_id: this.state.usuario_id
+            //usuario_id: this.state.usuario_id
         }) 
     }
 

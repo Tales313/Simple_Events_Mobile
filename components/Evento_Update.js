@@ -9,6 +9,7 @@ import {
     ToastAndroid,
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class EventoUpdate extends Component {
 
@@ -51,26 +52,38 @@ export default class EventoUpdate extends Component {
         this.setState({local})
     }
 
+    getToken = async () => {
+        try {
+          const value = await AsyncStorage.getItem('@token')
+          return value
+        } catch(e) {
+          console.log(e)
+        }
+      }
+
     atualizarEvento = async (id) => {
         let nome = this.state.nome
         let descricao = this.state.descricao
         let data = this.state.data
         let local = this.state.local
-        let owner = this.state.owner
+        //let owner = this.state.owner
+
+        let token = await this.getToken()
 
         const link = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
         const cabecalho = {
             method: "PUT",
             headers: {
               'Accept': 'application/json',
-              'Content-type': 'application/json'
+              'Content-type': 'application/json',
+              'Authorization': 'Token ' + token,
             },
             body: JSON.stringify({
                 'nome': nome,
                 'descricao': descricao,
                 'data': data,
                 'local': local,
-                'owner': owner
+                //'owner': owner
             })
         }
 

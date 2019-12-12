@@ -14,6 +14,7 @@ import EventosList from './Eventos_List'
 import EspecialidadesList from './Especialidades_List'
 import Adicionar_Especialidade from './Especialidade_New'
 import UserNew from './User_New'
+import Login from './Login'
 
 class Home extends Component {
 
@@ -37,10 +38,7 @@ class Home extends Component {
     }
 
     abrirTelaLogin() {
-        // por enquanto que o login não está implementado
-        // navega direto pra tela de eventos
-        //this.props.navigation.navigate('Login')
-        this.props.navigation.navigate('EventosList')
+        this.props.navigation.navigate('Login')
     }
 
     render(){
@@ -79,6 +77,7 @@ const AppNavigator = createStackNavigator(
         Adicionar_Usuario: {screen: UserNew},
         EspecialidadesList: {screen: EspecialidadesList},
         Adicionar_Especialidade: {screen: Adicionar_Especialidade},
+        Login: {screen: Login},
     },
     {
         initialRouteName: 'Home'

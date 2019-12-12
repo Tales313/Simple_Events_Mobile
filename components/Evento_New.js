@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class EventoNew extends Component {
 
@@ -31,10 +32,10 @@ export default class EventoNew extends Component {
             descricao: '',
             data: '',
             local: '',
-            usuario_id: this.props.navigation.getParam('usuario_id')
+            //usuario_id: this.props.navigation.getParam('usuario_id')
         }
 
-        console.log('construtor evento new: ' + this.props.navigation.getParam('usuario_id'))
+        //console.log('construtor evento new: ' + this.props.navigation.getParam('usuario_id'))
     }
 
     alterarNome = nome => {
@@ -53,28 +54,40 @@ export default class EventoNew extends Component {
         this.setState({local})
     }
 
+    getToken = async () => {
+        try {
+          const value = await AsyncStorage.getItem('@token')
+          return value
+        } catch(e) {
+          console.log(e)
+        }
+      }
+
     criarEvento = async () => {
         let nome = this.state.nome
         let descricao = this.state.descricao
         let data = this.state.data
         let local = this.state.local
-        let usuario_id = this.state.usuario_id
-        console.log('criar evento usuario_id: ' + usuario_id)
+        //let usuario_id = this.state.usuario_id
+        //console.log('criar evento usuario_id: ' + usuario_id)
+
+        let token = await this.getToken()
 
         const link = 'https://s-events-api.herokuapp.com/api/eventos/'
         const cabecalho = {
             method: "POST",
             headers: {
               'Accept': 'application/json',
-              'Content-type': 'application/json'
+              'Content-type': 'application/json',
+              'Authorization': 'Token ' + token,
             },
             body: JSON.stringify({
                 'nome': nome,
                 'descricao': descricao,
                 'data': data,
                 'local': local,
-                'finalizado': false,
-                'owner': 1
+                //'finalizado': false,
+                //'owner': 1
             })
         }
 

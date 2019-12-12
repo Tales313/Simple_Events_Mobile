@@ -9,6 +9,7 @@ import {
     ToastAndroid,
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class EspecialidadeNew extends Component {
 
@@ -40,16 +41,29 @@ export default class EspecialidadeNew extends Component {
         this.setState({descricao})
     }
 
+    getToken = async () => {
+        try {
+          const value = await AsyncStorage.getItem('@token')
+          return value
+        } catch(e) {
+          console.log(e)
+        }
+      }
+
     criarEspecialidade = async () => {
         let nome = this.state.nome
         let descricao = this.state.descricao
+
+        let token = await this.getToken()
+        console.log('TOKEN: ' + token)
 
         const link = 'https://s-events-api.herokuapp.com/api/especialidades/'
         const cabecalho = {
             method: "POST",
             headers: {
               'Accept': 'application/json',
-              'Content-type': 'application/json'
+              'Content-type': 'application/json',
+              'Authorization': 'Token ' + token,
             },
             body: JSON.stringify({
                 'nome': nome,
@@ -58,6 +72,7 @@ export default class EspecialidadeNew extends Component {
         }
 
         let response = await fetch(link, cabecalho)
+        console.log(response)
         if(response.status == 201) {
             ToastAndroid.show('Especialidade Criada!', ToastAndroid.SHORT)
             const refreshFunction = this.props.navigation.getParam('refresh')
