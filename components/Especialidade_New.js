@@ -5,7 +5,6 @@ import {
     TextInput, 
     StyleSheet, 
     Dimensions, 
-    Button,
     ToastAndroid,
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -55,7 +54,6 @@ export default class EspecialidadeNew extends Component {
         let descricao = this.state.descricao
 
         let token = await this.getToken()
-        console.log('TOKEN: ' + token)
 
         const link = 'https://s-events-api.herokuapp.com/api/especialidades/'
         const cabecalho = {
@@ -72,7 +70,6 @@ export default class EspecialidadeNew extends Component {
         }
 
         let response = await fetch(link, cabecalho)
-        console.log(response)
         if(response.status == 201) {
             ToastAndroid.show('Especialidade Criada!', ToastAndroid.SHORT)
             const refreshFunction = this.props.navigation.getParam('refresh')
@@ -125,7 +122,6 @@ export default class EspecialidadeNew extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,
         paddingHorizontal: 40,
         paddingVertical: 70,
@@ -136,7 +132,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
     inputBloco: {
-        //borderWidth: 1,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'

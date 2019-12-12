@@ -109,13 +109,11 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     container: {
-        //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,
         paddingTop: 20,
         paddingHorizontal: 5,
     },
     especialidade: {
-        //borderWidth: 1,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -132,12 +130,10 @@ const styles = StyleSheet.create({
         color: 'grey',
     },
     nomeDescricao: {
-        //borderWidth: 1,
         flex: 8,
         
     },
     editarApagar: {
-        //borderWidth: 1,
         flex: 2,
         flexDirection: 'row',
         justifyContent: 'space-around',

@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    Dimensions 
+} from 'react-native'
 
 export default class EventoShow extends Component {
 
@@ -69,7 +74,6 @@ const styles = StyleSheet.create({
         paddingVertical: 30,
     },
     blocoNome: {
-        //borderWidth: 1,
         flex: 5,
         justifyContent: 'center',
         alignItems: 'center',
@@ -79,7 +83,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     blocoDescricao: {
-        //borderWidth: 1,
         flex: 5,
         justifyContent: 'center',
         alignItems: 'center',
@@ -91,7 +94,6 @@ const styles = StyleSheet.create({
     },
     blocoLocalData: {
         flex: 7,
-        //borderWidth: 1,
     },
     dataLocal: {
         marginVertical: 20,

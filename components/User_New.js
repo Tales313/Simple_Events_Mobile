@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-
 import { 
     View, 
     Text, 
@@ -116,11 +115,9 @@ export default class UserNew extends Component {
 
             this.props.navigation.navigate('EventosList', {
                 usuario_nome: usuario.nome,
-                //usuario_id: usuario.id
             })
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
-            console.log(response.status)
         }
 
     }
@@ -202,41 +199,12 @@ export default class UserNew extends Component {
 
 }
 
-//const AppNavigator = createStackNavigator(
-//    {
-//        EventosList: {screen: EventosList},
-//       Evento: {screen: Evento},
-//        Editar_Evento: {screen: Editar_Evento},
-//        Adicionar_Evento: {screen: Adicionar_Evento},
-//        Adicionar_Usuario: {screen: UserNew},
-//        EspecialidadesList: {screen: EspecialidadesList},
-//        Adicionar_Especialidade: {screen: Adicionar_Especialidade},
-//    },
-//    {
-//        initialRouteName: 'Adicionar_Usuario'
-//    }
-//  )
-  
-//const AppContainer = createAppContainer(AppNavigator)
-
-//export default class App extends Component {
-//    render(){
-//      return(
-//        <AppContainer></AppContainer>
-//      )
-//    }
-//  }
-
-
 const styles = StyleSheet.create({
     container: {
-        //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,
         paddingHorizontal: 40,
-        //paddingVertical: 30,
     },
     inputBloco: {
-        //borderWidth: 1,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
