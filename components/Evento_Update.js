@@ -66,7 +66,6 @@ export default class EventoUpdate extends Component {
         let descricao = this.state.descricao
         let data = this.state.data
         let local = this.state.local
-        //let owner = this.state.owner
 
         let token = await this.getToken()
 
@@ -83,7 +82,6 @@ export default class EventoUpdate extends Component {
                 'descricao': descricao,
                 'data': data,
                 'local': local,
-                //'owner': owner
             })
         }
 
@@ -165,13 +163,11 @@ export default class EventoUpdate extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        //flex: 1,
         height: (Dimensions.get('window').height / 100) * 92,
         paddingHorizontal: 40,
         paddingVertical: 70,
     },
     inputBloco: {
-        //borderWidth: 1,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'

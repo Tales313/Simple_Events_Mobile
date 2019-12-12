@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, StyleSheet, ToastAndroid,
-    Text, View, Dimensions, TouchableOpacity } from 'react-native'
+import { 
+    ScrollView, 
+    FlatList, 
+    StyleSheet, 
+    ToastAndroid,
+    Text, 
+    View, 
+    Dimensions, 
+    TouchableOpacity 
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ActionButton from 'react-native-action-button'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -25,7 +33,6 @@ export default class EventosList extends Component {
             eventos: [],
             refresh: 0,
             usuario_nome: this.props.navigation.getParam('usuario_nome'),
-            //usuario_id: this.props.navigation.getParam('usuario_id')
         }
 
         // se usuario logado for adm:
@@ -91,11 +98,8 @@ export default class EventosList extends Component {
     }
 
     abrirAddEvento() {
-        console.log('eventos-list-usuario.nome' + this.state.usuario_nome)
-        console.log('eventos-list usuario_id: ' + this.state.usuario_id)
         this.props.navigation.navigate('Adicionar_Evento', {
             refresh: this.refresh.bind(this),
-            //usuario_id: this.state.usuario_id
         }) 
     }
 
