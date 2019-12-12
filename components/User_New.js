@@ -61,6 +61,13 @@ export default class UserNew extends Component {
         this.setState({password})
     }
     
+    salvarToken = async (token) => {
+        try {
+          await AsyncStorage.setItem('@token', token)
+        } catch (e) {
+          console.log(e)
+        }
+    }
 
     criarUser = async () => {
         let nome = this.state.nome
@@ -70,8 +77,8 @@ export default class UserNew extends Component {
         let email = this.state.email
         let password = this.state.password
 
-        const link = 'https://s-events-api.herokuapp.com/api/users/'
-        const cabecalho = {
+        let link = 'https://s-events-api.herokuapp.com/api/users/'
+        let cabecalho = {
             method: "POST",
             headers: {
               'Accept': 'application/json',
@@ -88,15 +95,28 @@ export default class UserNew extends Component {
         }
 
         let response = await fetch(link, cabecalho)
-        console.log('user_new-response.status: ' + response.status)
         let usuario =  await response.json()
-        console.log('user_new-usuario.nome: ' + usuario.nome)
         if(response.status == 201) {
             ToastAndroid.show('Usuário Criado!', ToastAndroid.SHORT)
-            console.log('user new passou do TOAST')
+            link = 'https://s-events-api.herokuapp.com/api/api-token-auth/'
+            cabecalho = {
+                method: "POST",
+                headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'username': username,
+                    'password': password,
+                })
+            }
+            response = await fetch(link, cabecalho)
+            let json = await response.json()
+            this.salvarToken(json.token)
+
             this.props.navigation.navigate('EventosList', {
                 usuario_nome: usuario.nome,
-                usuario_id: usuario.id
+                //usuario_id: usuario.id
             })
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)

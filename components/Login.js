@@ -4,9 +4,11 @@ import {
     Text, 
     TextInput, 
     StyleSheet, 
-    Dimensions, 
+    Dimensions,
+    ToastAndroid, 
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class Login extends Component {
 
@@ -38,8 +40,41 @@ export default class Login extends Component {
         this.setState({senha})
     }
 
-    login = () => {
-        // TODO
+    salvarToken = async (token) => {
+        try {
+          await AsyncStorage.setItem('@token', token)
+        } catch (e) {
+          console.log(e)
+        }
+      }
+
+    login = async () => {
+        let username = this.state.username
+        let senha = this.state.senha
+
+        const link = 'https://s-events-api.herokuapp.com/api/api-token-auth/'
+        const cabecalho = {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                'username': username,
+                'password': senha,
+            })
+        }
+
+        let response = await fetch(link, cabecalho)
+        let json = await response.json()
+        this.salvarToken(json.token)
+        
+        if(response.status == 200) {
+            this.props.navigation.navigate('EventosList')
+        }else {
+            ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
+        }
+
     }
 
     render(){
