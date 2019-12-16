@@ -6,10 +6,13 @@ import {
     StyleSheet, 
     Dimensions, 
     ToastAndroid,
+    ScrollView,
+    CheckBox,
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class EventoNew extends Component {
 
@@ -28,11 +31,58 @@ export default class EventoNew extends Component {
         super(props)
 
         this.state = {
+            refresh: 0,
             nome: '',
             descricao: '',
             data: '',
             local: '',
+            isChecked: false,
+            especialidades: [],
+            vagas: [],
         }
+
+        this.getEspecialidadesFromApi()
+    }
+
+    getEspecialidadesFromApi() {
+        const url = 'https://s-events-api.herokuapp.com/api/especialidades/'
+        fetch(url).then(res => res.json()).then(res => {
+            this.setState({especialidades: res})
+            for (let e in res)
+                this.state.vagas.push(0)
+            this.refresh()
+        }).catch(error => {
+            console.error(error)
+        })
+    }
+
+    renderCheckBoxes = () => {
+        return this.state.especialidades.map((e, i) => {
+            return (
+                <View key={e.nome} style={styles.especialidade}>
+                    <Text>{e.nome} / Vagas: </Text>
+                    <Text>{this.state.vagas[i]}</Text>
+                    <TouchableOpacity
+                        onPress={() => this.addVaga(i)}
+                    >
+                        <Icon name="plus" size={25} color="green" />
+                    </TouchableOpacity>
+                </View>
+            )
+        })
+    }
+
+    refresh = () => {
+        this.setState({refresh: this.state.refresh+1})
+    }
+
+    alterarChecked = (indice, valor) => {
+        this.state.checkeds[indice] = valor
+    }
+
+    addVaga = indice => {
+        this.state.vagas[indice] += 1
+        this.refresh()
     }
 
     alterarNome = nome => {
@@ -58,7 +108,7 @@ export default class EventoNew extends Component {
         } catch(e) {
           console.log(e)
         }
-      }
+    }
 
     criarEvento = async () => {
         let nome = this.state.nome
@@ -99,69 +149,72 @@ export default class EventoNew extends Component {
 
     render(){
         return(
-            <View style={{height: '100%'}}>
-            <View style={styles.container}>
-                <View style={styles.inputBloco}>
-                    <Text
-                        style={styles.textoGrande}
-                    >Novo Evento</Text>
-                </View>
-                <View style={styles.inputBloco}>
-                    <View>
-                        <Text style={styles.label} >Nome</Text>
-                        <TextInput style={styles.inputText} value={this.state.nome} 
-                            onChangeText={this.alterarNome} />
+            <ScrollView>
+                <View style={styles.container}>
+                    <View style={styles.inputBloco}>
+                        <Text
+                            style={styles.textoGrande}
+                        >Novo Evento</Text>
                     </View>
-                </View>
-                <View style={styles.inputBloco}>
-                    <View>
-                        <Text style={styles.label} >Descrição</Text>
-                        <TextInput style={styles.inputText} value={this.state.descricao} 
-                            onChangeText={this.alterarDescricao} />
+                    <View style={styles.inputBloco}>
+                        <View>
+                            <Text style={styles.label} >Nome</Text>
+                            <TextInput style={styles.inputText} value={this.state.nome} 
+                                onChangeText={this.alterarNome} />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.inputBloco}>
-                    <View>
-                        <Text style={styles.label} >Data</Text>
-                        <DatePicker 
-                            style={styles.inputText}
-                            date={this.state.data}
-                            mode="date"
-                            format="YYYY-MM-DD"
-                            minDate={new Date()}
-                            onDateChange={this.alterarData}
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 4,
-                                    marginLeft: 0
-                                },
-                                dateInput: {
-                                    marginLeft: 36
-                                }
-                            }}
-                        />
+                    <View style={styles.inputBloco}>
+                        <View>
+                            <Text style={styles.label} >Descrição</Text>
+                            <TextInput style={styles.inputText} value={this.state.descricao} 
+                                onChangeText={this.alterarDescricao} />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.inputBloco}>
-                    <View>
-                        <Text style={styles.label} >Endereço</Text>
-                        <TextInput style={styles.inputText} value={this.state.local}
-                            onChangeText={this.alterarLocal} />
+                    <View style={styles.inputBloco}>
+                        <View>
+                            <Text style={styles.label} >Data</Text>
+                            <DatePicker 
+                                style={styles.inputText}
+                                date={this.state.data}
+                                mode="date"
+                                format="YYYY-MM-DD"
+                                minDate={new Date()}
+                                onDateChange={this.alterarData}
+                                customStyles={{
+                                    dateIcon: {
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 4,
+                                        marginLeft: 0
+                                    },
+                                    dateInput: {
+                                        marginLeft: 36
+                                    }
+                                }}
+                            />
+                        </View>
                     </View>
-                </View>
-                <View style={styles.inputBloco}>
-                    <TouchableOpacity
-                        onPress={() => this.criarEvento()}
-                    >
+                    <View style={styles.inputBloco}>
+                        <View>
+                            <Text style={styles.label} >Endereço</Text>
+                            <TextInput style={styles.inputText} value={this.state.local}
+                                onChangeText={this.alterarLocal} />
+                        </View>
+                    </View>
+                    <View style={styles.especialidades}>
+                        {this.renderCheckBoxes()}
+                    </View>
+                    <View style={styles.inputBloco}>
+                        <TouchableOpacity
+                            onPress={() => this.criarEvento()}
+                        >
                         <View style={styles.botaoSubmit}>
                             <Text style={styles.textoBotaoSubmit}>Criar</Text>
                         </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-            </View>
+            </ScrollView>
         )
     }
 
@@ -169,7 +222,7 @@ export default class EventoNew extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        height: (Dimensions.get('window').height / 100) * 92,
+        //height: (Dimensions.get('window').height / 100) * 92,
         paddingHorizontal: 40,
         paddingVertical: 70,
     },
@@ -179,9 +232,26 @@ const styles = StyleSheet.create({
         fontSize: 40,
     },
     inputBloco: {
+        //borderWidth: 1,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    especialidades: {
+        //borderWidth: 1,
+        paddingLeft: 20,
+    },
+    especialidade: {
+        //borderWidth: 1,
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent: 'space-between',
+        paddingVertical:10,
+    },
+    inputQtdVagas: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#309ebf',
+        height: 40,
     },
     label: {
         color: '#5c5c5c',
