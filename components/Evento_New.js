@@ -36,7 +36,6 @@ export default class EventoNew extends Component {
             descricao: '',
             data: '',
             local: '',
-            isChecked: false,
             especialidades: [],
             vagas: [],
         }
@@ -60,7 +59,12 @@ export default class EventoNew extends Component {
         return this.state.especialidades.map((e, i) => {
             return (
                 <View key={e.nome} style={styles.especialidade}>
-                    <Text>{e.nome} / Vagas: </Text>
+                    <Text style={styles.nomeEspecialidade}>{e.nome} </Text>
+                    <TouchableOpacity
+                        onPress={() => this.removeVaga(i)}
+                    >
+                        <Icon name="minus" size={25} color="red" />
+                    </TouchableOpacity>
                     <Text>{this.state.vagas[i]}</Text>
                     <TouchableOpacity
                         onPress={() => this.addVaga(i)}
@@ -76,13 +80,16 @@ export default class EventoNew extends Component {
         this.setState({refresh: this.state.refresh+1})
     }
 
-    alterarChecked = (indice, valor) => {
-        this.state.checkeds[indice] = valor
-    }
-
     addVaga = indice => {
         this.state.vagas[indice] += 1
         this.refresh()
+    }
+
+    removeVaga = indice => {
+        if((this.state.vagas[indice] - 1) >= 0) {
+            this.state.vagas[indice] -= 1
+            this.refresh()
+        }
     }
 
     alterarNome = nome => {
@@ -115,6 +122,11 @@ export default class EventoNew extends Component {
         let descricao = this.state.descricao
         let data = this.state.data
         let local = this.state.local
+        let vagas = []
+        this.state.vagas.forEach((qtd_vagas, index) => {
+            if (qtd_vagas > 0)
+                vagas.push([this.state.especialidades[index].nome, qtd_vagas])
+        })
 
         let token = await this.getToken()
 
@@ -131,10 +143,12 @@ export default class EventoNew extends Component {
                 'descricao': descricao,
                 'data': data,
                 'local': local,
+                'vagas': vagas,
             })
         }
 
         let response = await fetch(link, cabecalho)
+        console.log(response)
         let evento =  await response.json()
         if(response.status == 201) {
             ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT)
@@ -201,6 +215,9 @@ export default class EventoNew extends Component {
                                 onChangeText={this.alterarLocal} />
                         </View>
                     </View>
+                    <View style={styles.headerVagas}>
+                        <Text style={styles.vagash3}>Vagas</Text>
+                    </View>
                     <View style={styles.especialidades}>
                         {this.renderCheckBoxes()}
                     </View>
@@ -237,16 +254,30 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    headerVagas: {
+        //borderWidth: 1,
+        alignItems: 'center',
+        marginTop: 15,
+        marginBottom: 10,
+    },
+    vagash3: {
+        fontSize: 25,
+    },
     especialidades: {
         //borderWidth: 1,
-        paddingLeft: 20,
+        paddingHorizontal: 15,
     },
     especialidade: {
         //borderWidth: 1,
         flexDirection:'row',
         alignItems:'center',
         justifyContent: 'space-between',
-        paddingVertical:10,
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+    },
+    nomeEspecialidade: {
+        width: 100,
     },
     inputQtdVagas: {
         borderBottomWidth: 1,
