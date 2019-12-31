@@ -123,10 +123,11 @@ export default class EventosList extends Component {
                                 <View style={styles.nomeData}>
                                     <TouchableOpacity 
                                         onPress={ () => this.props.navigation.navigate('Evento', {
-                                            nome: item.nome,
-                                            descricao: item.descricao,
-                                            data: item.data,
-                                            local: item.local,
+                                            id: item.id,
+                                            //nome: item.nome,
+                                            //descricao: item.descricao,
+                                            //data: item.data,
+                                            //local: item.local,
                                         }) }>
                                         <Text style={styles.nome}>{item.nome}</Text>
                                     </TouchableOpacity>
