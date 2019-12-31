@@ -7,7 +7,6 @@ import {
     Dimensions, 
     ToastAndroid,
     ScrollView,
-    CheckBox,
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { TouchableOpacity } from 'react-native-gesture-handler'
