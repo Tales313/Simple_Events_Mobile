@@ -4,9 +4,11 @@ import {
     Text, 
     StyleSheet, 
     ScrollView,
+    ToastAndroid,
 } from 'react-native'
 import { RadioButton } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class EventoShow extends Component {
 
@@ -28,10 +30,12 @@ export default class EventoShow extends Component {
             refresh: 0,
             nome: '',
             descricao: '',
+            owner: '',
             data: '',
             local: '',
             vagas: [],
             checked: '',
+            usuarioLogado: '',
         }
 
         this.getEventoFromApi()
@@ -43,33 +47,82 @@ export default class EventoShow extends Component {
         let url = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
         let response = await fetch(url)
         let evento = await response.json()
+        let usuarioLogado = await this.getUserName()
 
-        let vagas_aux = []
-        let vaga_aux, esp
-        for(let vaga of evento.vagas) {
-            url = 'https://s-events-api.herokuapp.com/api/especialidades/' + vaga.especialidade + '/'
-            response = await fetch(url)
-            esp = await response.json()
-            vaga_aux = vaga
-            vaga_aux.nome = esp.nome
-            vagas_aux.push(vaga_aux)
-        }
         this.setState({nome: evento.nome})
         this.setState({descricao: evento.descricao})
+        this.setState({owner: evento.owner})
         this.setState({data: evento.data})
         this.setState({local: evento.local})
-        this.setState({vagas: vagas_aux})
+        this.setState({vagas: evento.vagas})
+        this.setState({usuarioLogado})
     }
 
     refresh = () => {
         this.setState({refresh: this.state.refresh+1})
     }
 
-    candidatar() {
-        alert('IMPLEMENTAR!')
+    getToken = async () => {
+        try {
+          const value = await AsyncStorage.getItem('@token')
+          return value
+        } catch(e) {
+          console.log(e)
+        }
+    }
+
+    getUserName = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@username')
+            return value
+        } catch(e) {
+            console.log(e)
+        }   
+    }
+
+    candidatar = async () => {
+        let id_da_vaga = 0
+        for (let vaga of this.state.vagas) {
+            if(vaga.especialidade == this.state.checked)
+                id_da_vaga = vaga.id
+        }
+        
+        if(id_da_vaga == 0) {
+            alert('Essa vaga não existe')
+            return
+        }
+
+        let url = 'https://s-events-api.herokuapp.com/api/vagas/' + id_da_vaga + '/candidatar/'
+        let token = await this.getToken()
+        let cabecalho = {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json',
+              'Authorization': 'Token ' + token,
+            }
+        }
+        let response = await fetch(url, cabecalho)
+        if(response.status >= 200 && response.status <= 204) {
+            ToastAndroid.show('Candidatura Efetuada!', ToastAndroid.SHORT)
+        } else {
+            ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
+        }
     }
 
     renderVagas = () => {
+
+        // se o usuario logado for o dono do evento os radios
+        // não devem aparecer para ele, então retorne somente os nomes
+        if(this.state.usuarioLogado == this.state.owner)
+            return this.state.vagas.map(vaga => {
+                return (
+                    <View style={styles.vaga}>
+                        <Text>{vaga.especialidade}</Text>
+                    </View>            
+                )
+            })
+
         let checked = this.state.checked
         return this.state.vagas.map(vaga => {
             return (
@@ -83,6 +136,21 @@ export default class EventoShow extends Component {
                 </View>            
             )
         })
+    }
+
+    renderBotaoCandidatar = () => {
+        if(this.state.usuarioLogado == this.state.owner)
+            return (<View><Text></Text></View>)
+        else 
+            return (
+                <TouchableOpacity
+                    onPress={() => this.candidatar()}
+                >
+                    <View style={styles.botaoCandidatar}>
+                        <Text style={styles.textoBotaoCandidatar}>Candidatar-se</Text>
+                    </View>
+                </TouchableOpacity>
+            )
     }
 
     render(){
@@ -102,13 +170,7 @@ export default class EventoShow extends Component {
                     <View style={styles.BlocoVagas}>
                         <Text style={styles.vagasNome}>Vagas</Text>
                         {this.renderVagas()}
-                        <TouchableOpacity
-                            onPress={() => this.candidatar()}
-                        >
-                        <View style={styles.botaoCandidatar}>
-                            <Text style={styles.textoBotaoCandidatar}>Candidatar-se</Text>
-                        </View>
-                        </TouchableOpacity>
+                        {this.renderBotaoCandidatar()}
                     </View>
                 </View>
             </ScrollView>

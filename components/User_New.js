@@ -68,6 +68,14 @@ export default class UserNew extends Component {
         }
     }
 
+    salvarUserName = async (username) => {
+        try {
+            await AsyncStorage.setItem('@username', username)
+        } catch (e) {
+            console.log(e)
+        }   
+    }
+
     criarUser = async () => {
         let nome = this.state.nome
         let username = this.state.username
@@ -112,7 +120,8 @@ export default class UserNew extends Component {
             response = await fetch(link, cabecalho)
             let json = await response.json()
             this.salvarToken(json.token)
-
+            this.salvarUserName(username)
+            
             this.props.navigation.navigate('EventosList', {
                 usuario_nome: usuario.nome,
             })

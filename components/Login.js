@@ -46,7 +46,15 @@ export default class Login extends Component {
         } catch (e) {
           console.log(e)
         }
-      }
+    }
+
+    salvarUserName = async (username) => {
+        try {
+            await AsyncStorage.setItem('@username', username)
+        } catch (e) {
+            console.log(e)
+        }   
+    }
 
     login = async () => {
         let username = this.state.username
@@ -68,6 +76,7 @@ export default class Login extends Component {
         let response = await fetch(link, cabecalho)
         let json = await response.json()
         this.salvarToken(json.token)
+        this.salvarUserName(username)
         
         if(response.status == 200) {
             this.props.navigation.navigate('EventosList')
