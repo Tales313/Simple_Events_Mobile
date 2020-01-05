@@ -105,6 +105,7 @@ export default class EventoShow extends Component {
         let response = await fetch(url, cabecalho)
         if(response.status >= 200 && response.status <= 204) {
             ToastAndroid.show('Candidatura Efetuada!', ToastAndroid.SHORT)
+            this.props.navigation.goBack()
         } else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
@@ -118,7 +119,7 @@ export default class EventoShow extends Component {
             return this.state.vagas.map(vaga => {
                 return (
                     <View style={styles.vaga}>
-                        <Text>{vaga.especialidade}</Text>
+                        <Text>{vaga.especialidade} / {vaga.qtd_candidatos} candidatos</Text>
                     </View>            
                 )
             })

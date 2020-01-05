@@ -35,25 +35,6 @@ export default class EventosList extends Component {
             usuarioLogado: '',
         }
 
-        // se usuario logado for adm:
-        // no actions abaixo adicione um
-        // botao para listagem de especialidades
-
-        this.actions = [
-            {
-                text: 'Novo Evento!',
-                name: 'Adicionar_Evento',
-                icon: require('../images/calendar.jpg'),
-                position: 1,
-            },
-            {
-                text: 'Especialidades',
-                name: 'EspecialidadesList',
-                icon: require('../images/especialidade.png'),
-                position: 2
-            },
-        ]
-        
         this.getEventosFromApi()
     }
 
@@ -95,6 +76,18 @@ export default class EventosList extends Component {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
         this.refresh()
+    }
+
+    botaoEspecialidades = () => {
+        if (this.state.usuarioLogado == 'admin')
+            return (
+                <ActionButton.Item
+                    buttonColor="#7339ad"
+                    title="Especialidades"
+                    onPress={() => this.abrirListEspecialidades()}>
+                    <Icon name="users" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+            )    
     }
 
     async getEventosFromApi() {
@@ -186,12 +179,7 @@ export default class EventosList extends Component {
                         onPress={() => this.abrirAddEvento()}>
                         <Icon name="calendar" style={styles.actionButtonIcon} />
                     </ActionButton.Item>
-                    <ActionButton.Item
-                        buttonColor="#7339ad"
-                        title="Especialidades"
-                        onPress={() => this.abrirListEspecialidades()}>
-                        <Icon name="users" style={styles.actionButtonIcon} />
-                    </ActionButton.Item>
+                    {this.botaoEspecialidades()}
                 </ActionButton>
             </ScrollView>
         )
