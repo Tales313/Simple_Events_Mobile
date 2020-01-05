@@ -32,7 +32,7 @@ export default class EventosList extends Component {
         this.state = {
             eventos: [],
             refresh: 0,
-            usuario_nome: this.props.navigation.getParam('usuario_nome'),
+            usuarioLogado: '',
         }
 
         // se usuario logado for adm:
@@ -64,7 +64,16 @@ export default class EventosList extends Component {
         } catch(e) {
           console.log(e)
         }
-      }
+    }
+
+    getUserName = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@username')
+            return value
+        } catch(e) {
+            console.log(e)
+        }
+    }
 
     apagarEvento = async (id) => {
         let token = await this.getToken()
@@ -88,7 +97,9 @@ export default class EventosList extends Component {
         this.refresh()
     }
 
-    getEventosFromApi() {
+    async getEventosFromApi() {
+        let usuarioLogado = await this.getUserName()
+        this.setState({usuarioLogado})
         const url = 'https://s-events-api.herokuapp.com/api/eventos/'
         fetch(url).then(res => res.json()).then(res => {
             this.setState({eventos: res})
@@ -109,6 +120,36 @@ export default class EventosList extends Component {
 
     refresh() {
         this.getEventosFromApi()
+    }
+
+    renderBotoesEditarApagar = (owner) => {
+        // se o usuario logado for dono do evento,
+        // renderize os botoes de editar e apagar
+        if(this.state.usuarioLogado == owner)
+            return (
+                <View style={styles.editarApagar}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Editar_Evento', {
+                        id: item.id,
+                        nome: item.nome,
+                        descricao: item.descricao,
+                        data: item.data,
+                        local: item.local,
+                        owner: item.owner,
+                        refresh: this.refresh.bind(this)
+                    })}>
+                        <Icon name="pencil" size={25} color="blue" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.apagarEvento(item.id)}>
+                        <Icon name="trash" size={25} color="red" />
+                    </TouchableOpacity>
+                </View>
+            )
+        else
+            return (
+                <View></View>
+            )
     }
 
     render() {
@@ -133,24 +174,7 @@ export default class EventosList extends Component {
                                     </TouchableOpacity>
                                     <Text style={styles.data}>{item.data}</Text>
                                 </View>
-                                <View style={styles.editarApagar}>
-                                    <TouchableOpacity
-                                        onPress={() => this.props.navigation.navigate('Editar_Evento', {
-                                            id: item.id,
-                                            nome: item.nome,
-                                            descricao: item.descricao,
-                                            data: item.data,
-                                            local: item.local,
-                                            owner: item.owner,
-                                            refresh: this.refresh.bind(this)
-                                        })}>
-                                        <Icon name="pencil" size={25} color="blue" />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => this.apagarEvento(item.id)}>
-                                        <Icon name="trash" size={25} color="red" />
-                                    </TouchableOpacity>
-                                </View>
+                                {this.renderBotoesEditarApagar(item.owner)}
                             </View>
                         )}
                     />
