@@ -105,6 +105,7 @@ export default class EventoShow extends Component {
         let response = await fetch(url, cabecalho)
         if(response.status >= 200 && response.status <= 204) {
             ToastAndroid.show('Candidatura Efetuada!', ToastAndroid.SHORT)
+            this.props.navigation.goBack()
         } else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
