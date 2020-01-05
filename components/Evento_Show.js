@@ -119,7 +119,7 @@ export default class EventoShow extends Component {
             return this.state.vagas.map(vaga => {
                 return (
                     <View style={styles.vaga}>
-                        <Text>{vaga.especialidade}</Text>
+                        <Text>{vaga.especialidade} / {vaga.qtd_candidatos} candidatos</Text>
                     </View>            
                 )
             })
