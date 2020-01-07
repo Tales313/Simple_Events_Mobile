@@ -75,6 +75,7 @@ export default class Login extends Component {
 
         let response = await fetch(link, cabecalho)
         let json = await response.json()
+        console.log('TOKEN: ' + json.token)
         this.salvarToken(json.token)
         this.salvarUserName(username)
         

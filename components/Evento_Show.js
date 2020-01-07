@@ -111,6 +111,12 @@ export default class EventoShow extends Component {
         }
     }
 
+    abrirDeferimento(id_vaga) {
+        this.props.navigation.navigate('Deferir_Candidatura', {
+            id_vaga: id_vaga
+        })
+    }
+
     renderVagas = () => {
 
         // se o usuario logado for o dono do evento os radios
@@ -118,9 +124,11 @@ export default class EventoShow extends Component {
         if(this.state.usuarioLogado == this.state.owner)
             return this.state.vagas.map(vaga => {
                 return (
-                    <View style={styles.vaga}>
+                    <TouchableOpacity style={styles.vaga}
+                        onPress={() => this.abrirDeferimento(vaga.id)}
+                    >
                         <Text>{vaga.especialidade} / {vaga.qtd_candidatos} candidatos</Text>
-                    </View>            
+                    </TouchableOpacity>
                 )
             })
 
