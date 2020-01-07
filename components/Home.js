@@ -15,6 +15,7 @@ import EspecialidadesList from './Especialidades_List'
 import Adicionar_Especialidade from './Especialidade_New'
 import UserNew from './User_New'
 import Login from './Login'
+import Deferir_Candidatura from './Deferir_Candidatura'
 
 class Home extends Component {
 
@@ -78,6 +79,7 @@ const AppNavigator = createStackNavigator(
         EspecialidadesList: {screen: EspecialidadesList},
         Adicionar_Especialidade: {screen: Adicionar_Especialidade},
         Login: {screen: Login},
+        Deferir_Candidatura: {screen: Deferir_Candidatura},
     },
     {
         initialRouteName: 'Home'
