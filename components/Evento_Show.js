@@ -111,9 +111,11 @@ export default class EventoShow extends Component {
         }
     }
 
-    abrirDeferimento(id_vaga) {
+    abrirDeferimento(id_vaga, qtd_vagas, especialidade) {
         this.props.navigation.navigate('Deferir_Candidatura', {
-            id_vaga: id_vaga
+            id_vaga: id_vaga,
+            qtd_vagas: qtd_vagas,
+            especialidade: especialidade,
         })
     }
 
@@ -125,7 +127,8 @@ export default class EventoShow extends Component {
             return this.state.vagas.map(vaga => {
                 return (
                     <TouchableOpacity style={styles.vaga}
-                        onPress={() => this.abrirDeferimento(vaga.id)}
+                        onPress={() => this.abrirDeferimento(
+                            vaga.id, vaga.qtd_vagas, vaga.especialidade)}
                     >
                         <Text>{vaga.especialidade} / {vaga.qtd_candidatos} candidatos</Text>
                     </TouchableOpacity>
