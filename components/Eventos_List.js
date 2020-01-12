@@ -115,10 +115,10 @@ export default class EventosList extends Component {
         this.getEventosFromApi()
     }
 
-    renderBotoesEditarApagar = (owner) => {
+    renderBotoesEditarApagar = (item) => {
         // se o usuario logado for dono do evento,
         // renderize os botoes de editar e apagar
-        if(this.state.usuarioLogado == owner)
+        if(this.state.usuarioLogado == item.owner)
             return (
                 <View style={styles.editarApagar}>
                     <TouchableOpacity
@@ -167,7 +167,7 @@ export default class EventosList extends Component {
                                     </TouchableOpacity>
                                     <Text style={styles.data}>{item.data}</Text>
                                 </View>
-                                {this.renderBotoesEditarApagar(item.owner)}
+                                {this.renderBotoesEditarApagar(item)}
                             </View>
                         )}
                     />
