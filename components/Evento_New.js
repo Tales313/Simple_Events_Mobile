@@ -147,7 +147,6 @@ export default class EventoNew extends Component {
         }
 
         let response = await fetch(link, cabecalho)
-        console.log(response)
         let evento =  await response.json()
         if(response.status == 201) {
             ToastAndroid.show('Evento Criado!', ToastAndroid.SHORT)

@@ -119,10 +119,32 @@ export default class EventoShow extends Component {
         })
     }
 
-    renderVagas = () => {
+    finalizar = async () => {
+        let id = this.props.navigation.getParam('id')
+        let url = 'https://s-events-api.herokuapp.com/api/eventos/' + id + '/'
+        let token = await this.getToken()
+        let cabecalho = {
+            method: "PUT",
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json',
+              'Authorization': 'Token ' + token,
+            },
+            body: JSON.stringify({
+                'finalizado': true
+            })
+        }
 
-        // se o usuario logado for o dono do evento os radios
-        // não devem aparecer para ele, então retorne somente os nomes
+        let response = await fetch(url, cabecalho)
+        let evento =  await response.json()
+        if(response.status == 200) {
+            this.props.navigation.goBack()
+        }else {
+            ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
+        }
+    }
+
+    renderVagas = () => {
         if(this.state.usuarioLogado == this.state.owner)
             return this.state.vagas.map(vaga => {
                 return (
@@ -164,7 +186,7 @@ export default class EventoShow extends Component {
                 </TouchableOpacity>
             )
     }
-
+///
     render(){
         return(
             <ScrollView>
@@ -184,6 +206,13 @@ export default class EventoShow extends Component {
                         {this.renderVagas()}
                         {this.renderBotaoCandidatar()}
                     </View>
+                    <TouchableOpacity
+                        onPress={() => this.finalizar()}
+                        >
+                        <View style={styles.botaoFinalizar}>
+                            <Text style={styles.textoBotaoFinalizar}>Finalizar Inscrições</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         )
@@ -233,6 +262,7 @@ const styles = StyleSheet.create({
     vagasNome: {
         fontSize: 25,
         textAlign: 'center',
+        marginBottom: 10,
     },
     vaga: {
         //borderWidth: 1,
@@ -252,5 +282,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#fff',
         textAlign: 'center',
+    },
+    botaoFinalizar: {
+        backgroundColor: '#309ebf',
+        padding: 10,
+        borderRadius: 25,
+        alignItems: 'center',
+    },
+    textoBotaoFinalizar: {
+        color: '#fff',
+        fontWeight: 'bold',
     }
 })
