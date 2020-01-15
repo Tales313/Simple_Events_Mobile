@@ -162,6 +162,7 @@ export default class EventosList extends Component {
                                             //descricao: item.descricao,
                                             //data: item.data,
                                             //local: item.local,
+                                            refresh: this.refresh.bind(this),
                                         }) }>
                                         <Text style={styles.nome}>{item.nome}</Text>
                                     </TouchableOpacity>

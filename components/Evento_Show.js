@@ -131,13 +131,20 @@ export default class EventoShow extends Component {
               'Authorization': 'Token ' + token,
             },
             body: JSON.stringify({
-                'finalizado': true
+                'nome': this.state.nome,
+                'descricao': this.state.descricao,
+                'data': this.state.data,
+                'local': this.state.local,
+                'finalizado': true,
             })
         }
 
         let response = await fetch(url, cabecalho)
         let evento =  await response.json()
         if(response.status == 200) {
+            ToastAndroid.show('Evento finalizado!', ToastAndroid.SHORT)
+            const refreshFunction = this.props.navigation.getParam('refresh')
+            refreshFunction() // atualizando a listagem de eventos
             this.props.navigation.goBack()
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
