@@ -29,10 +29,9 @@ export default class DeferirCandidatura extends Component {
 			id_vaga: this.props.navigation.getParam('id_vaga'),
 			qtd_vagas: this.props.navigation.getParam('qtd_vagas'),
 			especialidade: this.props.navigation.getParam('especialidade'),
+			evento_finalizado: this.props.navigation.getParam('finalizado'),
 			candidaturas: [],
 		}
-
-		this.ids_deferidos = []
 
 		this.getCandidaturasFromApi()
 
@@ -73,8 +72,6 @@ export default class DeferirCandidatura extends Component {
 				if(c.state_vaga == 1)
 					qtd_deferidos += 1
 			})
-			console.log('qtd_deferidos: ' + qtd_deferidos)
-			console.log('qtd_vaga: ' + this.state.qtd_vagas)
 			if((qtd_deferidos + 1) > this.state.qtd_vagas) {
 				let txt_deferido = qtd_deferidos == 1 ? 'deferido' : 'deferidos'
 				alert('Já existem ' + qtd_deferidos + ' ' + txt_deferido + ' para essa vaga!')
@@ -108,7 +105,25 @@ export default class DeferirCandidatura extends Component {
 	}
 
 	renderizarBotao = (candidatura) => {
-		if(candidatura.state_vaga == 1) { //deferido
+		let deferido = candidatura.state_vaga == 1 ? true : false
+
+		if(this.state.evento_finalizado) {
+			if(deferido) {
+				return (
+					<View>
+						<Text style={styles.textoDeferido}>Deferido</Text>
+					</View>
+				)
+			} else {
+				return (
+					<View>
+						<Text style={styles.textoIndeferido}>Indeferido</Text>
+					</View>
+				)
+			}
+		}
+
+		if(deferido) { //deferido
 			return (
 				<TouchableOpacity
 					onPress={() => this.deferir(candidatura)}
@@ -203,5 +218,11 @@ const styles = StyleSheet.create({
     textoBotaoIndeferir: {
     	fontWeight: 'bold',
         color: '#fff',
-    }
+    },
+    textoDeferido: {
+    	color: 'green',
+    },
+    textoIndeferido: {
+    	color: 'red',
+    },
 })
