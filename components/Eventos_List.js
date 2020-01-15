@@ -118,33 +118,44 @@ export default class EventosList extends Component {
     renderBotoesEditarApagar = (item) => {
         // se o usuario logado for dono do evento,
         // renderize os botoes de editar e apagar
-        if(this.state.usuarioLogado == item.owner)
+        if (item.finalizado == true) {
             return (
-                <View style={styles.editarApagar}>
-                    <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('Editar_Evento', {
-                        id: item.id,
-                        nome: item.nome,
-                        descricao: item.descricao,
-                        data: item.data,
-                        local: item.local,
-                        owner: item.owner,
-                        refresh: this.refresh.bind(this)
-                    })}>
-                        <Icon name="pencil" size={25} color="blue" />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.apagarEvento(item.id)}>
-                        <Icon name="trash" size={25} color="red" />
-                    </TouchableOpacity>
+                <View style={styles.viewTxtInscricoes}>
+                    <Text style={styles.txtVermelho}>Inscricoes Encerradas</Text>
                 </View>
-            )
-        else
-            return (
-                <View></View>
-            )
+            )            
+        } else {
+            if(this.state.usuarioLogado == item.owner) {
+                return (
+                    <View style={styles.editarApagar}>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('Editar_Evento', {
+                            id: item.id,
+                            nome: item.nome,
+                            descricao: item.descricao,
+                            data: item.data,
+                            local: item.local,
+                            owner: item.owner,
+                            refresh: this.refresh.bind(this)
+                        })}>
+                            <Icon name="pencil" size={25} color="blue" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => this.apagarEvento(item.id)}>
+                            <Icon name="trash" size={25} color="red" />
+                        </TouchableOpacity>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={styles.viewTxtInscricoes}>
+                        <Text style={styles.txtVerde}>Inscrições Abertas</Text>
+                    </View>
+                )
+            }
+        }
     }
-
+///
     render() {
         return (
             <ScrollView style={styles.tela}>
@@ -162,6 +173,7 @@ export default class EventosList extends Component {
                                             //descricao: item.descricao,
                                             //data: item.data,
                                             //local: item.local,
+                                            refresh: this.refresh.bind(this),
                                         }) }>
                                         <Text style={styles.nome}>{item.nome}</Text>
                                     </TouchableOpacity>
@@ -185,7 +197,7 @@ export default class EventosList extends Component {
         )
     }
 }
-
+///
 const styles = StyleSheet.create({
     tela: {
         height: '100%',
@@ -218,6 +230,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
+    },
+    viewTxtInscricoes: {
+        flex: 2,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    },
+    txtVermelho: {
+        color: 'red',
+    },
+    txtVerde: {
+        color: 'green',
     },
     actionButtonIcon: {
         fontSize: 20,

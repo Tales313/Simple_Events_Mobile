@@ -33,6 +33,7 @@ export default class EventoShow extends Component {
             owner: '',
             data: '',
             local: '',
+            finalizado: '',
             vagas: [],
             checked: '',
             usuarioLogado: '',
@@ -54,6 +55,7 @@ export default class EventoShow extends Component {
         this.setState({owner: evento.owner})
         this.setState({data: evento.data})
         this.setState({local: evento.local})
+        this.setState({finalizado: evento.finalizado})
         this.setState({vagas: evento.vagas})
         this.setState({usuarioLogado})
     }
@@ -111,11 +113,12 @@ export default class EventoShow extends Component {
         }
     }
 
-    abrirDeferimento(id_vaga, qtd_vagas, especialidade) {
+    abrirDeferimento(id_vaga, qtd_vagas, especialidade, finalizado) {
         this.props.navigation.navigate('Deferir_Candidatura', {
             id_vaga: id_vaga,
             qtd_vagas: qtd_vagas,
             especialidade: especialidade,
+            finalizado: finalizado,
         })
     }
 
@@ -131,62 +134,114 @@ export default class EventoShow extends Component {
               'Authorization': 'Token ' + token,
             },
             body: JSON.stringify({
-                'finalizado': true
+                'nome': this.state.nome,
+                'descricao': this.state.descricao,
+                'data': this.state.data,
+                'local': this.state.local,
+                'finalizado': true,
             })
         }
 
         let response = await fetch(url, cabecalho)
         let evento =  await response.json()
         if(response.status == 200) {
+            ToastAndroid.show('Evento finalizado!', ToastAndroid.SHORT)
+            const refreshFunction = this.props.navigation.getParam('refresh')
+            refreshFunction() // atualizando a listagem de eventos
             this.props.navigation.goBack()
         }else {
             ToastAndroid.show('Algo deu errado.', ToastAndroid.SHORT)
         }
     }
 
+    renderBlocoVagas = () => {
+        return (
+            <View style={styles.BlocoVagas}>
+                <Text style={styles.vagasNome}>Vagas</Text>
+                {this.renderVagas()}
+                {this.renderBotaoCandidatar()}
+            </View>
+        )
+    }
+///
     renderVagas = () => {
-        if(this.state.usuarioLogado == this.state.owner)
+        if(this.state.usuarioLogado == this.state.owner) {
             return this.state.vagas.map(vaga => {
                 return (
                     <TouchableOpacity style={styles.vaga}
                         onPress={() => this.abrirDeferimento(
-                            vaga.id, vaga.qtd_vagas, vaga.especialidade)}
+                            vaga.id, vaga.qtd_vagas, vaga.especialidade, this.state.finalizado)}
                     >
                         <Text>{vaga.especialidade} / {vaga.qtd_candidatos} candidatos</Text>
                     </TouchableOpacity>
                 )
             })
+        }
 
         let checked = this.state.checked
-        return this.state.vagas.map(vaga => {
+        if(!this.state.finalizado){
+            return this.state.vagas.map(vaga => {
+                return (
+                    <View style={styles.vaga}>
+                        <RadioButton 
+                            value={vaga.especialidade}
+                            status={checked === vaga.especialidade ? 'checked' : 'unchecked'}
+                            onPress={() => { this.setState({ checked: vaga.especialidade })} }
+                        />
+                        <Text>{vaga.especialidade}</Text>
+                    </View>            
+                )
+            })
+        } else {
             return (
-                <View style={styles.vaga}>
-                    <RadioButton 
-                        value={vaga.especialidade}
-                        status={checked === vaga.especialidade ? 'checked' : 'unchecked'}
-                        onPress={() => { this.setState({ checked: vaga.especialidade })} }
-                    />
-                    <Text>{vaga.especialidade}</Text>
-                </View>            
+                <View>
+                    <Text>Inscrições encerradas!</Text>
+                </View>
             )
-        })
+        }
     }
 
     renderBotaoCandidatar = () => {
-        if(this.state.usuarioLogado == this.state.owner)
+        if(this.state.usuarioLogado == this.state.owner) {
             return (<View><Text></Text></View>)
-        else 
-            return (
-                <TouchableOpacity
-                    onPress={() => this.candidatar()}
-                >
-                    <View style={styles.botaoCandidatar}>
-                        <Text style={styles.textoBotaoCandidatar}>Candidatar-se</Text>
-                    </View>
-                </TouchableOpacity>
-            )
+        } else {
+            if(this.state.finalizado) {
+                return (<View><Text></Text></View>)
+            } else {
+                return (
+                    <TouchableOpacity
+                        onPress={() => this.candidatar()}
+                    >
+                        <View style={styles.botaoCandidatar}>
+                            <Text style={styles.textoBotaoCandidatar}>Candidatar-se</Text>
+                        </View>
+                    </TouchableOpacity>
+                )
+            }
+        }
     }
 ///
+    renderFinalizar = () => {
+        if(this.state.finalizado == true) {
+            return (
+                <View></View>
+            )
+        ///
+        } else {
+            if(this.state.usuarioLogado == this.state.owner) {
+                return (
+                    <TouchableOpacity
+                        onPress={() => this.finalizar()}
+                    >
+                        <View style={styles.botaoFinalizar}>
+                            <Text style={styles.textoBotaoFinalizar}>Finalizar Inscrições</Text>
+                        </View>
+                    </TouchableOpacity>
+                )
+            }
+        }
+    }
+
     render(){
         return(
             <ScrollView>
@@ -201,25 +256,15 @@ export default class EventoShow extends Component {
                         <Text style={styles.dataLocal}>{this.state.data}</Text>
                         <Text style={styles.dataLocal}>{this.state.local}</Text>
                     </View>
-                    <View style={styles.BlocoVagas}>
-                        <Text style={styles.vagasNome}>Vagas</Text>
-                        {this.renderVagas()}
-                        {this.renderBotaoCandidatar()}
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => this.finalizar()}
-                        >
-                        <View style={styles.botaoFinalizar}>
-                            <Text style={styles.textoBotaoFinalizar}>Finalizar Inscrições</Text>
-                        </View>
-                    </TouchableOpacity>
+                    {this.renderBlocoVagas()}
+                    {this.renderFinalizar()}
                 </View>
             </ScrollView>
         )
     }
 
 }
-
+///
 const styles = StyleSheet.create({
     container: {
         //height: (Dimensions.get('window').height / 100) * 92,
